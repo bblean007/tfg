@@ -25,8 +25,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Initialize Firebase
-        FirebaseApp.initializeApp(this);
+        // Initialize Firebase (Handled in MiniTfgApp, but keeping safety check)
+        if (FirebaseApp.getApps(this).isEmpty()) {
+            FirebaseApp.initializeApp(this);
+        }
 
         // Auth Check
         if (FirebaseAuth.getInstance().getCurrentUser() == null) {
