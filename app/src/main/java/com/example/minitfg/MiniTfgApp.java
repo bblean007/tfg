@@ -20,6 +20,9 @@ public class MiniTfgApp extends Application {
                         .setStorageBucket("studyprint-8afd4.firebasestorage.app")
                         .build();
                 FirebaseApp.initializeApp(this, options);
+                android.util.Log.d("MiniTfgApp", "Firebase initialized manually successfully");
+            } else {
+                android.util.Log.d("MiniTfgApp", "Firebase already initialized");
             }
         } catch (Exception e) {
             e.printStackTrace();
