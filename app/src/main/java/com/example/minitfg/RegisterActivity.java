@@ -15,6 +15,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     private EditText etEmail, etPassword;
     private Button btnRegister;
+    private android.widget.TextView tvLogin;
     private FirebaseAuth auth;
     private FirebaseFirestore db;
 
@@ -29,8 +30,13 @@ public class RegisterActivity extends AppCompatActivity {
         etEmail = findViewById(R.id.etEmail);
         etPassword = findViewById(R.id.etPassword);
         btnRegister = findViewById(R.id.btnRegister);
+        tvLogin = findViewById(R.id.tvLogin);
 
         btnRegister.setOnClickListener(v -> register());
+        tvLogin.setOnClickListener(v -> {
+            startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+            finish();
+        });
     }
 
     private void register() {
