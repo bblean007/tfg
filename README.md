@@ -11,13 +11,7 @@ Este proyecto es una aplicación educativa para Android desarrollada como parte 
 
 ## Configuración del Proyecto
 
-Para ejecutar este proyecto, necesitas configurar Firebase:
-
-1.  Crea un proyecto en [Firebase Console](https://console.firebase.google.com/).
-2.  Añade una aplicación Android con el paquete `com.example.minitfg`.
-3.  Descarga el archivo `google-services.json`.
-4.  Coloca el archivo `google-services.json` en la carpeta `app/` del proyecto.
-5.  Habilita **Authentication** (Email/Password) y **Firestore Database** en la consola de Firebase.
+*   Para ejecutar este proyecto, necesitas realizar un comando "npm start" dentro de la carpeta de backend.
 
 ## Requisitos
 
