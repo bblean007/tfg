@@ -1,45 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:gravity="center"
-    android:padding="20dp"
-    android:background="@drawable/background1"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/background1">
 
-    <Button
-        android:id="@+id/btnEmpezar"
-        android:text="Jugar"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content" />
+    <LinearLayout
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="20dp"
+        android:layout_centerInParent="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-    <Button
-        android:id="@+id/btnRankings"
-        android:text="Rankings"
-        android:layout_marginTop="20dp"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content" />
+        <!-- Animación de personaje -->
+        <ImageView
+            android:id="@+id/ivSpriteCharacter"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginBottom="10dp"
+            android:scaleType="centerCrop"
+            android:visibility="gone" />
 
-    <Button
-        android:id="@+id/btnAlarm"
-        android:text="Configurar Alarma"
-        android:layout_marginTop="20dp"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content" />
+        <Button
+            android:id="@+id/btnEmpezar"
+            android:text="Jugar"
+            android:textColor="@color/white"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content" />
 
-    <Button
-        android:id="@+id/btnConfig"
-        android:text="Configuración"
-        android:layout_marginTop="20dp"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content" />
+        <Button
+            android:id="@+id/btnRankings"
+            android:text="Rankings"
+            android:textColor="@color/white"
+            android:layout_marginTop="20dp"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content" />
 
-    <Button
-        android:id="@+id/btnLogout"
-        android:text="Cerrar Sesión"
-        android:layout_marginTop="20dp"
-        android:backgroundTint="#D32F2F"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content" />
+        <Button
+            android:id="@+id/btnAlarm"
+            android:text="Configurar Alarma"
+            android:textColor="@color/white"
+            android:layout_marginTop="20dp"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content" />
 
-</LinearLayout>
+        <Button
+            android:id="@+id/btnConfig"
+            android:text="Configuración"
+            android:textColor="@color/white"
+            android:layout_marginTop="20dp"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/btnLogout"
+            android:text="Cerrar Sesión"
+            android:textColor="@color/white"
+            android:layout_marginTop="20dp"
+            android:backgroundTint="#D32F2F"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabHelp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="24dp"
+        android:src="@drawable/help"
+        app:fabSize="normal"
+        android:contentDescription="Botón de ayuda" />
+
+</RelativeLayout>

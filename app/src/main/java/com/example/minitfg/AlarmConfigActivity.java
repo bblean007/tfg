@@ -6,11 +6,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import com.example.minitfg.utils.AlarmHelper;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.Calendar;
 
 public class AlarmConfigActivity extends AppCompatActivity {
@@ -18,6 +25,7 @@ public class AlarmConfigActivity extends AppCompatActivity {
     private CheckBox[] dayCheckBoxes;
     private TimePicker timePicker;
     private Button btnSaveAlarm;
+    private FloatingActionButton fabHelp;
     private SharedPreferences prefs;
 
     @Override
@@ -39,10 +47,50 @@ public class AlarmConfigActivity extends AppCompatActivity {
         timePicker = findViewById(R.id.timePicker);
         timePicker.setIs24HourView(true);
         btnSaveAlarm = findViewById(R.id.btnSaveAlarm);
+        fabHelp = findViewById(R.id.fabHelp);
 
         loadSavedSettings();
 
         btnSaveAlarm.setOnClickListener(v -> saveAndScheduleAlarms());
+        fabHelp.setOnClickListener(v -> showHelpModal());
+    }
+
+    private void showHelpModal() {
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_help, null);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(dialogView);
+        
+        AlertDialog dialog = builder.create();
+        
+        TextView tvHelpTitle = dialogView.findViewById(R.id.tvHelpTitle);
+        TextView tvHelpContent = dialogView.findViewById(R.id.tvHelpContent);
+        Button btnClose = dialogView.findViewById(R.id.btnHelpClose);
+        
+        tvHelpTitle.setText("Ayuda - Configurar Alarma");
+        tvHelpContent.setText("Configura tus recordatorios de estudio:\n\n" +
+                "• Días: Selecciona qué días de la semana quieres recibir el aviso.\n" +
+                "• Hora: Desliza para elegir la hora y el minuto exacto.\n" +
+                "• Guardar: Pulsa el botón para activar la programación.\n" +
+                "• Acceso rápido: Recuerda que puedes activar/desactivar todas las alarmas agitando el móvil en el menú principal.");
+
+        btnClose.setOnClickListener(v -> {
+            AlphaAnimation fadeOut = new AlphaAnimation(1.0f, 0.0f);
+            fadeOut.setDuration(300);
+            fadeOut.setAnimationListener(new Animation.AnimationListener() {
+                @Override public void onAnimationStart(Animation animation) {}
+                @Override public void onAnimationRepeat(Animation animation) {}
+                @Override public void onAnimationEnd(Animation animation) {
+                    dialog.dismiss();
+                }
+            });
+            dialogView.startAnimation(fadeOut);
+        });
+
+        dialog.show();
+        
+        AlphaAnimation fadeIn = new AlphaAnimation(0.0f, 1.0f);
+        fadeIn.setDuration(500);
+        dialogView.startAnimation(fadeIn);
     }
 
     private void loadSavedSettings() {
@@ -63,58 +111,13 @@ public class AlarmConfigActivity extends AppCompatActivity {
         editor.putInt("hour", hour);
         editor.putInt("minute", minute);
 
-        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-
-        // Map array index to Calendar days
-        // Index 0 (Mon) -> Calendar.MONDAY (2)
-        // Index 6 (Sun) -> Calendar.SUNDAY (1)
-        int[] calendarDays = {
-                Calendar.MONDAY, Calendar.TUESDAY, Calendar.WEDNESDAY,
-                Calendar.THURSDAY, Calendar.FRIDAY, Calendar.SATURDAY, Calendar.SUNDAY
-        };
-
         for (int i = 0; i < 7; i++) {
-            boolean isChecked = dayCheckBoxes[i].isChecked();
-            editor.putBoolean("day_" + i, isChecked);
-
-            int alarmId = 100 + i; // IDs 100 to 106
-            Intent intent = new Intent(this, AlarmReceiver.class);
-            intent.putExtra("message", "¡Hora de estudiar!");
-
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(
-                    this, alarmId, intent,
-                    PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
-            );
-
-            if (isChecked) {
-                Calendar calendar = Calendar.getInstance();
-                calendar.set(Calendar.HOUR_OF_DAY, hour);
-                calendar.set(Calendar.MINUTE, minute);
-                calendar.set(Calendar.SECOND, 0);
-                calendar.set(Calendar.MILLISECOND, 0);
-                calendar.set(Calendar.DAY_OF_WEEK, calendarDays[i]);
-
-                // Check if this time has already passed this week
-                if (calendar.getTimeInMillis() <= System.currentTimeMillis()) {
-                    calendar.add(Calendar.DAY_OF_YEAR, 7);
-                }
-
-                if (alarmManager != null) {
-                    alarmManager.setRepeating(
-                            AlarmManager.RTC_WAKEUP,
-                            calendar.getTimeInMillis(),
-                            AlarmManager.INTERVAL_DAY * 7,
-                            pendingIntent
-                    );
-                }
-            } else {
-                if (alarmManager != null) {
-                    alarmManager.cancel(pendingIntent);
-                }
-            }
+            editor.putBoolean("day_" + i, dayCheckBoxes[i].isChecked());
         }
-
         editor.apply();
+
+        AlarmHelper.scheduleAlarms(this);
+
         Toast.makeText(this, "Alarmas actualizadas", Toast.LENGTH_SHORT).show();
         finish();
     }

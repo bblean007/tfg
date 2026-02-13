@@ -8,13 +8,20 @@ import androidx.appcompat.app.AppCompatDelegate;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Switch;
+import android.widget.TextView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class SettingsActivity extends AppCompatActivity {
 
     Button btnTerminos, btnGuardar, btnVolver;
     Switch switchDarkMode;
+    FloatingActionButton fabHelp;
 
     boolean cambiosRealizados = false;
     boolean modoOscuroActivado = false;
@@ -55,6 +62,9 @@ public class SettingsActivity extends AppCompatActivity {
 
         // Volver al menú con aviso
         btnVolver.setOnClickListener(v -> volverConAviso());
+
+        fabHelp = findViewById(R.id.fabHelp);
+        fabHelp.setOnClickListener(v -> showHelpModal());
 
         // Intercepta el boton de atrás
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
@@ -101,5 +111,43 @@ public class SettingsActivity extends AppCompatActivity {
         dlg.setNeutralButton("Cancelar", null);
 
         dlg.show();
+    }
+
+    private void showHelpModal() {
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_help, null);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(dialogView);
+        
+        AlertDialog dialog = builder.create();
+        
+        TextView tvHelpTitle = dialogView.findViewById(R.id.tvHelpTitle);
+        TextView tvHelpContent = dialogView.findViewById(R.id.tvHelpContent);
+        Button btnClose = dialogView.findViewById(R.id.btnHelpClose);
+        
+        tvHelpTitle.setText("Ayuda - Ajustes");
+        tvHelpContent.setText("Personaliza tu experiencia:\n\n" +
+                "• Modo oscuro: Cambia el tema de la aplicación para descansar la vista en entornos oscuros.\n" +
+                "• Términos: Consulta las condiciones legales de uso.\n" +
+                "• Guardar: No olvides pulsar aquí para aplicar tus cambios.\n" +
+                "• Salir: Si intentas salir sin guardar, te avisaremos para que no pierdas tus cambios.");
+
+        btnClose.setOnClickListener(v -> {
+            AlphaAnimation fadeOut = new AlphaAnimation(1.0f, 0.0f);
+            fadeOut.setDuration(300);
+            fadeOut.setAnimationListener(new Animation.AnimationListener() {
+                @Override public void onAnimationStart(Animation animation) {}
+                @Override public void onAnimationRepeat(Animation animation) {}
+                @Override public void onAnimationEnd(Animation animation) {
+                    dialog.dismiss();
+                }
+            });
+            dialogView.startAnimation(fadeOut);
+        });
+
+        dialog.show();
+        
+        AlphaAnimation fadeIn = new AlphaAnimation(0.0f, 1.0f);
+        fadeIn.setDuration(500);
+        dialogView.startAnimation(fadeIn);
     }
 }

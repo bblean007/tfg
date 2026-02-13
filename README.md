@@ -1,4 +1,4 @@
-# StudySprint - App Educativa Android
+# MiniTFG - App Educativa Android
 
 Este proyecto es una aplicación educativa para Android desarrollada como parte de la asignatura de Desarrollo de Aplicaciones Móviles.
 
